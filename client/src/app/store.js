@@ -6,6 +6,7 @@ import rootReducer from "./rootReducer";
 
 // Import RTK Query API slice
 import { authApi } from "@/features/api/authApi.js";
+import { courseApi } from "@/features/api/courseApi";
 
 // ---------------- CREATE REDUX STORE ----------------
 export const appStore = configureStore({
@@ -15,7 +16,7 @@ export const appStore = configureStore({
 
     // Add RTK Query middleware
     // This enables caching, invalidation, auto refetch, etc.
-    middleware: (defaultMiddleware) => defaultMiddleware().concat(authApi.middleware)
+    middleware: (defaultMiddleware) => defaultMiddleware().concat(authApi.middleware, courseApi.middleware)
 });
 
 

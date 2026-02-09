@@ -10,27 +10,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateCourseMutation } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AddCourse = () => {
-
   // ----------------- STATE ----------------------
   const [courseTitle, setCourseTitle] = useState("");
-  const [category, setCategory] = useState("")
-    
+  const [category, setCategory] = useState("");
+
+  // ---------- API CALLS ----------
+  const [createCourse, { data, error, isSuccess, isLoading }] =
+    useCreateCourseMutation();
+
   const navigate = useNavigate();
-  const isLoading = false;
-
-  // ----------------- Handlers Function ----------------------
-  const createCourseHandler = () => {
-    
-  };
-
   const getSelectedCategory = (value) => {
     setCategory(value);
-  }
+  };
+
+  // ----------------- Handlers Function ----------------------
+  const createCourseHandler = async () => {
+    await createCourse({ courseTitle, category });
+  };
+
+  // ---------- HOOKS(useEffect) ----------
+
+  // for displaying toast
+  useEffect(() => {
+    if(isSuccess) {
+      toast.success(data?.message || "Course created.")
+    }
+  }, [isSuccess, error])
+  
 
   return (
     <div className="flex-1 mx-10">
@@ -56,7 +69,7 @@ const AddCourse = () => {
         </div>
         <div>
           <Label>Category</Label>
-          <Select onValueChange={getSelectedCategory} >
+          <Select onValueChange={getSelectedCategory}>
             <SelectTrigger className="w-full max-w-48">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
